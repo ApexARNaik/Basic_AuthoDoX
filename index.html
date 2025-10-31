@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Autho.D.oX - AI Proof Registry</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="connectSection" class="page-section">
+        <h1>Welcome to Autho.D.oX</h1>
+        <p>
+          A decentralized registry to prove authorship of AI-generated content
+          using blockchain and IPFS.
+        </p>
+        <p>
+          Please connect your MetaMask wallet (Polygon Amoy Network) to
+          participate.
+        </p>
+        <button id="connectButton">Connect Wallet</button>
+        <p id="connectStatus" class="status-text"></p>
+      </div>
+
+      <div id="appSection" class="page-section" style="display: none">
+        <div class="header-bar">
+          <h1>Autho.D.oX Registry</h1>
+          <div class="wallet-info">
+            <p id="walletAddress">Not Connected</p>
+            <button id="showAdminLoginButtonApp" class="admin-button">
+              Owner Access
+            </button>
+            <button id="logoutButton" class="secondary-button">
+              Disconnect
+            </button>
+          </div>
+        </div>
+
+        <h2>Register New Proof</h2>
+
+        <label for="promptText">Prompt:</label>
+        <div class="input-area">
+          <textarea
+            id="promptText"
+            placeholder="Enter text prompt..."
+          ></textarea>
+          <div class="file-controls">
+            <label for="promptFile" class="file-input-label"
+              >Attach File (+)</label
+            >
+            <input type="file" id="promptFile" style="display: none" />
+            <span class="file-name" id="promptFileName">No file chosen</span>
+          </div>
+        </div>
+
+        <label for="responseText">AI Response:</label>
+        <div class="input-area">
+          <textarea
+            id="responseText"
+            placeholder="Enter text response..."
+          ></textarea>
+          <div class="file-controls">
+            <label for="responseFile" class="file-input-label"
+              >Attach File (+)</label
+            >
+            <input type="file" id="responseFile" style="display: none" />
+            <span class="file-name" id="responseFileName">No file chosen</span>
+          </div>
+        </div>
+
+        <label for="chatLinkInput">Chat/Source Link (Optional):</label>
+        <input
+          type="text"
+          id="chatLinkInput"
+          placeholder="e.g., https://chat.openai.com/share/..."
+        />
+
+        <button id="registerProofButton">Register Proof</button>
+        <p id="registerStatus" class="status-text"></p>
+
+        <hr />
+
+        <h2>Registered Proofs</h2>
+        <button id="loadReportsButton">Refresh Proofs</button>
+        <ul id="reportList">
+          <li>Click "Refresh Proofs" to load...</li>
+        </ul>
+      </div>
+
+      <div id="adminLoginSection" class="page-section" style="display: none">
+        <h1>Owner Access</h1>
+        <label for="adminPassword">Enter Owner Code:</label>
+        <input type="password" id="adminPassword" placeholder="Enter code" />
+        <button id="adminLoginButton">Login</button>
+        <p id="adminLoginStatus" class="status-text error-text"></p>
+        <hr />
+        <button id="backToConnectButton" class="secondary-button">
+          Back to Home
+        </button>
+      </div>
+
+      <div id="adminSection" class="page-section" style="display: none">
+        <div class="header-bar">
+          <h1>Owner Panel</h1>
+          <button id="adminLogoutButton" class="secondary-button">
+            Logout Owner
+          </button>
+        </div>
+        <p>Welcome, Owner!</p>
+        <p>Manage contract settings or funds.</p>
+        <p>(Currently no owner-specific actions implemented besides login)</p>
+      </div>
+    </div>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
