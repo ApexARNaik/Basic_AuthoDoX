@@ -261,7 +261,7 @@ const contractABI = [
     },
 ]; // PASTE ABI
 const ADMIN_PASSWORD = "2306"; // Change if desired (insecure demo password)
-const IPFS_GATEWAY = "https://gateway.pinata.cloud/ipfs/"; // Or your preferred gateway
+const IPFS_GATEWAY = "https://dweb.link/ipfs/"; // Or your preferred gateway
 // IMPORTANT: Store your Pinata JWT in Replit Secrets under the key 'VITE_PINATA_JWT'
 const PINATA_JWT = import.meta.env.VITE_PINATA_JWT; // Use Vite's method
 
@@ -498,13 +498,19 @@ async function loadReports() {
             // 1. Get the address of the NFT contract from our Registry
             const nftContractAddress = await contract.nftContract();
 
-            // 2. Define a minimal ABI for the 'totalSupply' function (which all ERC721 contracts have)
+            // 2. Define a minimal ABI for the 'ownerOf' function
             const nftContractABI = [
                 {
-                    inputs: [],
-                    name: "totalSupply",
+                    inputs: [
+                        {
+                            internalType: "uint256",
+                            name: "tokenId",
+                            type: "uint256",
+                        },
+                    ],
+                    name: "ownerOf",
                     outputs: [
-                        { internalType: "uint256", name: "", type: "uint256" },
+                        { internalType: "address", name: "", type: "address" },
                     ],
                     stateMutability: "view",
                     type: "function",
@@ -518,12 +524,25 @@ async function loadReports() {
                 provider,
             );
 
-            // 4. Call totalSupply() to get the count
-            const countBigNum = await nftContract.totalSupply();
-            numReports = countBigNum.toNumber();
+            // 4. Loop by checking ownerOf(i) until it fails
+            let i = 0;
+            while (true) {
+                try {
+                    await nftContract.ownerOf(i);
+                    // If ownerOf(i) succeeds, it means token 'i' exists
+                    i++; // So we increment the count and check for the next token
+                } catch (e) {
+                    // If ownerOf(i) fails, it's because that token ID doesn't exist.
+                    // This means the total number of tokens is 'i'.
+                    break; // Exit the while loop
+                }
+            }
+            numReports = i; // The total count is the number of tokens we found
             console.log("Found total proofs:", numReports);
         } catch (e) {
-            console.error("Error fetching total supply:", e);
+            // This catch block is for a *different* error, like if the
+            // nftContractAddress itself was invalid.
+            console.error("Error during proof count loop:", e);
             reportList.innerHTML =
                 "<li>❌ Error fetching proof count. Check console.</li>";
             loadReportsButton.disabled = false;
